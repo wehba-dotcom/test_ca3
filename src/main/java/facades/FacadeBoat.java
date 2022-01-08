@@ -2,7 +2,6 @@ package facades;
 
 import dtos.BoatDTO;
 import entities.Boat;
-import entities.Owner;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
@@ -22,11 +21,11 @@ public class FacadeBoat {
     private static EntityManagerFactory emf;
 
     //Private Constructor to ensure Singleton
-    private FacadeBoat() {}
-    
-    
+    private FacadeBoat() {
+    }
+
+
     /**
-     * 
      * @param _emf
      * @return an instance of this facade class.
      */
@@ -41,8 +40,8 @@ public class FacadeBoat {
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-    
-    public BoatDTO create(BoatDTO rm){
+
+    public BoatDTO create(BoatDTO rm) {
         Boat boat = new Boat(rm.getBrand(), rm.getMake(), rm.getName());
         EntityManager em = getEntityManager();
         try {
@@ -54,6 +53,7 @@ public class FacadeBoat {
         }
         return new BoatDTO(boat);
     }
+
     public BoatDTO getById(long id) { //throws RenameMeNotFoundException {
         EntityManager em = emf.createEntityManager();
         Boat boat = em.find(Boat.class, id);
@@ -61,19 +61,19 @@ public class FacadeBoat {
 //            throw new RenameMeNotFoundException("The RenameMe entity with ID: "+id+" Was not found");
         return new BoatDTO(boat);
     }
-    
+
     //TODO Remove/Change this before use
-    public long getBoatCount(){
+    public long getBoatCount() {
         EntityManager em = getEntityManager();
-        try{
-            long BoatCount = (long)em.createQuery("SELECT COUNT(r) FROM Boat r").getSingleResult();
+        try {
+            long BoatCount = (long) em.createQuery("SELECT COUNT(r) FROM Boat r").getSingleResult();
             return BoatCount;
-        }finally{  
+        } finally {
             em.close();
         }
     }
-    
-    public List<BoatDTO> getAll(){
+
+    public List<BoatDTO> getAll() {
         EntityManager em = emf.createEntityManager();
         TypedQuery<Boat> query = em.createQuery("SELECT r FROM Boat r", Boat.class);
         List<Boat> rms = query.getResultList();
@@ -106,6 +106,15 @@ public class FacadeBoat {
         return new BoatDTO(boat);
     }*/
 
+    public List<BoatDTO> getBoatsByHarbourName(String name) throws BoatNotFoundException {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Boat> query =
+                em.createQuery("select p from Boat p " +
+                        "inner join p.harbour h where h.name= :name", Boat.class);
+        query.setParameter("name", name);
+        List<Boat> boatList = query.getResultList();
+        return BoatDTO.getDtos(boatList);
+    }
 
 
     public static void main(String[] args) {
