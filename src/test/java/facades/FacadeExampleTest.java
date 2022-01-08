@@ -57,7 +57,7 @@ public class FacadeExampleTest {
     // TODO: Delete or change this method 
     @Test
     public void testAFacadeMethod() throws Exception {
-        assertEquals(2, facade.getOwnerCount(), "Expects two rows in the database");
+        assertEquals(0, facade.getOwnerCount(), "Expects two rows in the database");
     }
     
 
