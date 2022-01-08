@@ -30,7 +30,7 @@ public class OwnerDTO {
     }
 
     public static List<OwnerDTO> getDtos(List<Owner> rms){
-        List<OwnerDTO> rmdtos = new ArrayList();
+        List<OwnerDTO> rmdtos = new ArrayList<>();
         rms.forEach(rm->rmdtos.add(new OwnerDTO(rm)));
         return rmdtos;
     }

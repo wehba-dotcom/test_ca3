@@ -58,7 +58,7 @@ public class OwnerResource {
     }
 
 
-    
+
     @GET
     @Path("{name}")
     @Produces(MediaType.APPLICATION_JSON)
