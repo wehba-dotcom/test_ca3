@@ -57,6 +57,8 @@ public class OwnerResource {
         return GSON.toJson(FACADE_BOAT.getAll());
     }
 
+
+    
     @GET
     @Path("{name}")
     @Produces(MediaType.APPLICATION_JSON)
