@@ -2,6 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import facades.FacadeBoat;
 import facades.FacadeOwner;
 import facades.Populator;
 import utils.EMF_Creator;
@@ -20,6 +21,7 @@ public class OwnerResource {
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
        
     private static final FacadeOwner FACADE =  FacadeOwner.getFacadeOwner(EMF);
+    private static final FacadeBoat FACADE_BOAT =  FacadeBoat.getFacadeBoat(EMF);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
             
     @GET
@@ -41,6 +43,13 @@ public class OwnerResource {
     @Path("all")
     public String allOwners() {
         return GSON.toJson(FACADE.getAll());
+
+    }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("allboats")
+    public String allBoats() {
+        return GSON.toJson(FACADE_BOAT.getAll());
 
     }
  @GET

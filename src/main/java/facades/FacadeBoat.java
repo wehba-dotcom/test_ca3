@@ -2,13 +2,16 @@ package facades;
 
 import dtos.BoatDTO;
 import entities.Boat;
+import entities.Owner;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
-
+import exceptions.MissingInputException;
+import exceptions.BoatNotFoundException;
 /**
  *
  * Rename Class to a relevant name Add add relevant facade methods
@@ -76,7 +79,35 @@ public class FacadeBoat {
         List<Boat> rms = query.getResultList();
         return BoatDTO.getDtos(rms);
     }
-    
+   /* public BoatDTO addBoat(String brand, String make, String name,  List<Owner> owners) throws MissingInputException {
+        if ((brand.length() == 0) || (name.length() == 0)){
+            throw new MissingInputException("First Name and/or Last Name is missing");
+        }
+        EntityManager em = getEntityManager();
+        Boat boat = new Boat(brand, make, name);
+
+        try {
+            em.getTransaction().begin();
+            Query query = em.createQuery("SELECT a FROM Owner a WHERE a.name = :name AND a.address = :address AND a.phone = :phone");
+            query.setParameter("name", name);
+            query.setParameter("address",address);
+            query.setParameter("phone", phone);
+            List<Owner> owners1 = query.getResultList();
+            if (owners1.size() > 0){
+                boat.AddOwner(owners1.get(0));
+            } else {
+                boat.AddOwner(new Owner(name,address,phone));
+            }
+            em.persist(boat);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new BoatDTO(boat);
+    }*/
+
+
+
     public static void main(String[] args) {
         emf = EMF_Creator.createEntityManagerFactory();
         FacadeBoat fe = getFacadeBoat(emf);
