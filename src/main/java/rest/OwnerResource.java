@@ -11,10 +11,7 @@ import facades.Populator;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManagerFactory;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -57,7 +54,12 @@ public class OwnerResource {
         return GSON.toJson(FACADE_BOAT.getAll());
     }
 
-
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("allbwithh")
+    public String allBoatsWithHarbour() {
+        return GSON.toJson(FACADE_BOAT.getAllBoatsWithH());
+    }
 
     @GET
     @Path("{name}")
@@ -71,6 +73,36 @@ public class OwnerResource {
         List<BoatDTO> result = FACADE_BOAT.getBoatsByHarbourName(name);
         return Response.ok().entity(GSON.toJson(result)).build();
     }
+
+    @Path("add")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addBoat(String a) throws BoatNotFoundException,MissingInputException{
+        BoatDTO boatDTO = GSON.fromJson(a,BoatDTO.class);
+        BoatDTO reslt = FACADE_BOAT.createBoat(boatDTO.getBrand(),boatDTO.getMake(),boatDTO.getName());
+        return Response.ok().entity(GSON.toJson(reslt)).build();
+    }
+    @PUT
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateBoat(@PathParam("id")long id, String a) throws BoatNotFoundException,MissingInputException
+    {
+       BoatDTO boatDTO = GSON.fromJson(a,BoatDTO.class);
+        boatDTO.setB_id(id);
+        BoatDTO result = FACADE_BOAT.editBoat(boatDTO.getBrand(),boatDTO.getMake(),boatDTO.getName());
+        return Response.ok().entity(GSON.toJson(result)).build();
+    }
+
+    @DELETE
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response deleteBoat(@PathParam("id") Integer id) throws BoatNotFoundException {
+        BoatDTO result = FACADE_BOAT.deleteBoat(id);
+        return Response.ok().entity(GSON.toJson(result)).build();
+    }
+    
 
  @GET
     @Produces(MediaType.APPLICATION_JSON)

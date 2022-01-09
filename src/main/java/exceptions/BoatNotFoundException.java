@@ -10,7 +10,7 @@ package exceptions;
  * @author jobe
  */
 public class BoatNotFoundException extends Exception {
-    public BoatNotFoundException(String message) {
+    public BoatNotFoundException(int i, String message) {
         super(message);
     }
 }

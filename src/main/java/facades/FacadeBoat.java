@@ -2,6 +2,7 @@ package facades;
 
 import dtos.BoatDTO;
 import entities.Boat;
+import entities.Harbour;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
@@ -115,6 +116,63 @@ public class FacadeBoat {
         List<Boat> boatList = query.getResultList();
         return BoatDTO.getDtos(boatList);
     }
+    public List<BoatDTO> getAllBoatsWithH() {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Boat> query =
+                em.createQuery("SELECT p FROM Boat p " + "inner join p.harbour h where h.h_id= :h_id", Boat.class);
+        List<Boat> rms = query.getResultList();
+        return BoatDTO.getDtos(rms);
+    }
+    public BoatDTO getBoatById(long id) throws BoatNotFoundException {
+        EntityManager em = emf.createEntityManager();
+        Boat b = em.find(Boat.class,id);
+        return new BoatDTO(b);
+    }
+
+    public BoatDTO editBoat(String brand,String make,String name) throws BoatNotFoundException {
+        Boat boat = new Boat(brand,make,name);
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            boat = em.merge(boat);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new BoatDTO(boat);
+    }
+
+    public BoatDTO createBoat(String brand,String make,String name)throws BoatNotFoundException{
+        Boat boat = new Boat(brand,make,name);
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(boat);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new BoatDTO(boat);
+    }
+
+    public BoatDTO deleteBoat(int id) throws BoatNotFoundException {
+        EntityManager em = getEntityManager();
+        Boat boat = em.find(Boat.class, id);
+    Harbour harbour = em.find(Harbour.class, boat.getHarbour().getH_id());
+        if (boat == null) {
+            throw new BoatNotFoundException(404, "Could not delete, provided id does not exist");
+        }
+        try {
+            em.getTransaction().begin();
+            em.remove(boat);
+            em.remove(harbour);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new BoatDTO(boat);
+    }
+
 
 
     public static void main(String[] args) {
