@@ -3,6 +3,7 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.BoatDTO;
+import dtos.OwnerDTO;
 import exceptions.BoatNotFoundException;
 import exceptions.MissingInputException;
 import facades.FacadeBoat;
@@ -74,6 +75,8 @@ public class OwnerResource {
         return Response.ok().entity(GSON.toJson(result)).build();
     }
 
+
+
     @Path("add")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -102,7 +105,7 @@ public class OwnerResource {
         BoatDTO result = FACADE_BOAT.deleteBoat(id);
         return Response.ok().entity(GSON.toJson(result)).build();
     }
-    
+
 
  @GET
     @Produces(MediaType.APPLICATION_JSON)

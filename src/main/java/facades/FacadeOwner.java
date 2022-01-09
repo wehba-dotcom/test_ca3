@@ -1,6 +1,7 @@
 package facades;
 
 import dtos.OwnerDTO;
+import entities.Boat;
 import entities.Owner;
 import utils.EMF_Creator;
 

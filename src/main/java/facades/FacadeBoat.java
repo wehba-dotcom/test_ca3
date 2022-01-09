@@ -1,16 +1,17 @@
 package facades;
 
 import dtos.BoatDTO;
+import dtos.OwnerDTO;
 import entities.Boat;
 import entities.Harbour;
+import entities.Owner;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
-import exceptions.MissingInputException;
+
 import exceptions.BoatNotFoundException;
 /**
  *
@@ -107,6 +108,17 @@ public class FacadeBoat {
         return new BoatDTO(boat);
     }*/
 
+    public List<OwnerDTO> getOwnersByBoatName(String name) throws BoatNotFoundException {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Owner> query =
+                em.createQuery("select o from Owner o " +
+                        "inner join o.boates b where b.name= :name ", Owner.class);
+        query.setParameter("name", name);
+        List<Owner> ownerList = query.getResultList();
+        return OwnerDTO.getDtos(ownerList);
+    }
+
+
     public List<BoatDTO> getBoatsByHarbourName(String name) throws BoatNotFoundException {
         EntityManager em = emf.createEntityManager();
         TypedQuery<Boat> query =
@@ -116,6 +128,10 @@ public class FacadeBoat {
         List<Boat> boatList = query.getResultList();
         return BoatDTO.getDtos(boatList);
     }
+
+
+
+
     public List<BoatDTO> getAllBoatsWithH() {
         EntityManager em = emf.createEntityManager();
         TypedQuery<Boat> query =
